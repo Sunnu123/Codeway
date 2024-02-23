@@ -1,0 +1,62 @@
+import os
+
+def show_menu():
+    print("\n1. View To-Do List")
+    print("2. Add Task")
+    print("3. Mark Task as Done")
+    print("4. Exit")
+
+def view_tasks():
+    if os.path.exists("todo.txt"):
+        with open("todo.txt", "r") as file:
+            tasks = file.readlines()
+            if tasks:
+                print("\nTo-Do List:")
+                for i, task in enumerate(tasks, start=1):
+                    print(f"{i}. {task.strip()}")
+            else:
+                print("\nNo tasks in the To-Do List.")
+    else:
+        print("\nTo-Do List not found. Creating a new one.")
+
+def add_task():
+    task = input("\nEnter the task: ")
+    with open("todo.txt", "a") as file:
+        file.write(task + "\n")
+    print("Task added successfully.")
+
+def mark_done():
+    view_tasks()
+    try:
+        task_number = int(input("\nEnter the task number to mark as done: "))
+        with open("todo.txt", "r") as file:
+            tasks = file.readlines()
+        if 1 <= task_number <= len(tasks):
+            done_task = tasks.pop(task_number - 1)
+            with open("todo.txt", "w") as file:
+                file.writelines(tasks)
+            print(f"Task '{done_task.strip()}' marked as done.")
+        else:
+            print("Invalid task number.")
+    except ValueError:
+        print("Invalid input. Please enter a valid number.")
+
+def main():
+    while True:
+        show_menu()
+        choice = input("\nEnter your choice (1-4): ")
+
+        if choice == "1":
+            view_tasks()
+        elif choice == "2":
+            add_task()
+        elif choice == "3":
+            mark_done()
+        elif choice == "4":
+            print("Exiting the To-Do List application. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please enter a number between 1 and 4.")
+
+if __name__ == "__main__":
+    main()
